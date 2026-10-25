@@ -1,0 +1,36 @@
+@host = http://localhost:5012
+
+### Create a two-player game (mode 0 = TwoPlayer, 1 = Computer)
+# @name createGame
+POST {{host}}/api/games
+Content-Type: application/json
+
+{ "mode": 0 }
+
+### Read the current state
+@gameId = {{createGame.response.body.id}}
+GET {{host}}/api/games/{{gameId}}
+
+### Submit a move by row/column (0-based)
+POST {{host}}/api/games/{{gameId}}/moves
+Content-Type: application/json
+
+{ "player": "X", "row": 0, "column": 0 }
+
+### Submit a move by cell index (0..8)
+POST {{host}}/api/games/{{gameId}}/moves
+Content-Type: application/json
+
+{ "player": "O", "cellIndex": 4 }
+
+### Undo
+POST {{host}}/api/games/{{gameId}}/undo
+
+### Reset the game (scoreboard untouched)
+POST {{host}}/api/games/{{gameId}}/reset
+
+### Scoreboard
+GET {{host}}/api/scoreboard
+
+### Reset the scoreboard
+POST {{host}}/api/scoreboard/reset

@@ -1,0 +1,47 @@
+<main>
+  <header>
+    <h1>Tic Tac Toe</h1>
+    <label class="mode">
+      Mode
+      <select (change)="changeMode($any($event.target).value)" [disabled]="game.busy()">
+        <option [value]="GameMode.TwoPlayer" [selected]="game.mode() === GameMode.TwoPlayer">
+          Two Player
+        </option>
+        <option [value]="GameMode.Computer" [selected]="game.mode() === GameMode.Computer">
+          Play Against Computer
+        </option>
+      </select>
+    </label>
+  </header>
+
+  @if (game.error(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="layout">
+    <section class="play">
+      <p class="status" [class.complete]="game.isComplete()">{{ game.statusMessage() }}</p>
+
+      <app-board
+        [board]="game.board()"
+        [winningCells]="game.winningCells()"
+        [disabled]="game.busy() || game.isComplete()"
+        (cellClick)="game.play($event)" />
+
+      <div class="actions">
+        <button type="button" (click)="game.resetGame()" [disabled]="game.busy()">Reset Game</button>
+        <button type="button" (click)="game.undo()" [disabled]="game.busy() || !game.canUndo()">
+          Undo Last Move
+        </button>
+        <button type="button" class="secondary" (click)="game.resetScoreboard()" [disabled]="game.busy()">
+          Reset Scoreboard
+        </button>
+      </div>
+    </section>
+
+    <aside>
+      <app-scoreboard [scoreboard]="game.scoreboard()" />
+      <app-move-history [moves]="game.moves()" />
+    </aside>
+  </div>
+</main>
